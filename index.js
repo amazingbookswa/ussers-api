@@ -1,22 +1,31 @@
 const express =require("express")
 const userRoute = require("./routes/usersRoutes")
+const path = require("path");
+const logger = require("./middlewares/user.logger")
+const booksRoute = require("./routes/booksRoute")
 
 const app = express()
 
-//middlewires
+//middlewares
 app.use(express.json());
-
-app.use(userRoute)
+app.use(logger)
+app.use(userRoute);
+app.use(booksRoute)
 
 //home route
 app.get("/", (req, res)=>{
-    res.status(200).send("<h1>WELCOME TO MY USERS DATABASE</h1>");
+    res.sendFile(path.join(__dirname + "/pages/index.html"))
 })
 
-const PORT = 4000;
+app.get("/*", (req, res)=>{
+    res.status(400).sendFile(path.join(__dirname + "/pages/404.html"))
+})
 
+
+const PORT = 5000;
 
 app.listen(PORT, ()=>{
-console.log("SERVER IS UP")
-
+    console.log("SERVER IS UP")
 })
+
+
